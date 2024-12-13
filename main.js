@@ -1,8 +1,9 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./upgrades')
-const UpdateActions = require('./actions')
-const UpdateFeedbacks = require('./feedbacks')
-const UpdateVariableDefinitions = require('./variables')
+const UpgradeScripts = require('./src/upgrades')
+const UpdateActions = require('./src/actions')
+const UpdateFeedbacks = require('./src/feedbacks')
+const UpdateVariableDefinitions = require('./src/variables')
+const { ConnectClient, SetSrc, SetDst } = require('./src/comm')
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -11,12 +12,12 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
-
-		this.updateStatus(InstanceStatus.Ok)
-
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
+		this.updateStatus(InstanceStatus.Connecting) // set status to connecting
+		this.connectClient() // connect to client
+
 	}
 	// When module gets deleted
 	async destroy() {
@@ -25,6 +26,7 @@ class ModuleInstance extends InstanceBase {
 
 	async configUpdated(config) {
 		this.config = config
+		this.connectClient()
 	}
 
 	// Return config fields for web config
@@ -36,17 +38,18 @@ class ModuleInstance extends InstanceBase {
 				label: 'Target IP',
 				width: 8,
 				regex: Regex.IP,
-			},
-			{
-				type: 'textinput',
-				id: 'port',
-				label: 'Target Port',
-				width: 4,
-				regex: Regex.PORT,
-			},
+			}
 		]
 	}
 
+	setDst(gpi, port) {
+		this.log("info", "Setting dst_main")
+		SetDst(this, gpi, port)
+	}
+	setSrc(gpi, port) {
+		this.log("info", "Setting src_main")
+		SetSrc(this, gpi, port)
+	}
 	updateActions() {
 		UpdateActions(this)
 	}
@@ -57,6 +60,9 @@ class ModuleInstance extends InstanceBase {
 
 	updateVariableDefinitions() {
 		UpdateVariableDefinitions(this)
+	}
+	connectClient() {
+		ConnectClient(this)
 	}
 }
 

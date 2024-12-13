@@ -1,3 +1,3 @@
-## Your module
+## Blackmagic Designe: GPI and Tally interface
 
-Write some help for your users here!
+This module can help you, to configure the GPI events to smarthub.
