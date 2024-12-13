@@ -63,6 +63,7 @@ module.exports = {
         self.communicator.on('error', (err) => {
             self.log('error', err)
             this.updateStatus(InstanceStatus.BadConfig)
+            
         })
 
     },

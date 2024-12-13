@@ -19,7 +19,7 @@
 		"apiVersion": "0.0.0",
 		"entrypoint": "../main.js"
 	},
-	"legacyIds": ["Blackmagicdesign: GPI and Tally Interface"],
+	"legacyIds": [],
 	"manufacturer": "Blackmagic Design",
 	"products": ["GPI and Tally Interface"],
 	"keywords": ["GPIO", "GPI", "Tally", "Videohub", "Blackmagic"]
