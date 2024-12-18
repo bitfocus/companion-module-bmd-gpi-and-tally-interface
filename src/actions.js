@@ -55,6 +55,23 @@ module.exports = function (self) {
 				parent.log("info", "Setting dst_action")
 				parent.setDst(event.options.gpi, event.options.port)
 			}
+		},
+		SetLatch : {
+			name: 'Override mode',
+			options: [
+				{
+					id: 'latch',
+					type: 'dropdown',
+					label: 'Override mode',
+					choices: [
+						{ id: '0', label: 'Momentary Hold Video' },
+						{ id: '1', label: 'Latch mode' },
+					],
+				}],
+				callback: async (event) => {
+					parent.log("info", "Setting dst_action")
+					parent.setLatch(event.options.latch)
+				}
 		}
 	})
 }

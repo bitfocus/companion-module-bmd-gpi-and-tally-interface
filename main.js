@@ -1,11 +1,11 @@
-const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
+const { InstanceBase, Regex, runEntrypoint, InstanceStatus, TCPHelper } = require('@companion-module/base')
 const UpgradeScripts = require('./src/upgrades')
 const UpdateActions = require('./src/actions')
 const UpdateFeedbacks = require('./src/feedbacks')
 const UpdateVariableDefinitions = require('./src/variables')
-const { ConnectClient, SetSrc, SetDst } = require('./src/comm')
+const { ConnectClient, SetSrc, SetDst, SetLatch } = require('./src/comm')
 
-class ModuleInstance extends InstanceBase {
+class BmdGPIAndTallyControll extends InstanceBase {
 	constructor(internal) {
 		super(internal)
 	}
@@ -22,9 +22,19 @@ class ModuleInstance extends InstanceBase {
 	// When module gets deleted
 	async destroy() {
 		this.log('debug', 'destroy')
+		if (this.comm) {
+			this.comm.destroy()
+		} else {
+			this.updateStatus(InstanceStatus.Disconnected)
+		}
+
 	}
 
 	async configUpdated(config) {
+		if (this.comm) {
+			this.comm.destroy()
+			delete this.comm
+		}
 		this.config = config
 		this.connectClient()
 	}
@@ -50,6 +60,10 @@ class ModuleInstance extends InstanceBase {
 		this.log("info", "Setting src_main")
 		SetSrc(this, gpi, port)
 	}
+	setLatch(value) {
+		this.log("info", "Setting src_main")
+		SetLatch(this, value)
+	}
 	updateActions() {
 		UpdateActions(this)
 	}
@@ -66,4 +80,4 @@ class ModuleInstance extends InstanceBase {
 	}
 }
 
-runEntrypoint(ModuleInstance, UpgradeScripts)
+runEntrypoint(BmdGPIAndTallyControll, UpgradeScripts)

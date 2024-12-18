@@ -15,6 +15,7 @@ module.exports = function (self) {
 		{ variableId: 'GPI5Dest', name: 'GPI Event 5 Destination' },
 		{ variableId: 'GPI6Dest', name: 'GPI Event 6 Destination' },
 		{ variableId: 'GPI7Dest', name: 'GPI Event 7 Destination' },
-		{ variableId: 'GPI8Dest', name: 'GPI Event 8 Destination' }
+		{ variableId: 'GPI8Dest', name: 'GPI Event 8 Destination' },
+		{ variableId: 'latch', name: 'Latch Mode Enabled' },
 	])
 }
