@@ -3,7 +3,7 @@
 	"name": "Blackmagic Design: GPI and Tally Interface",
 	"shortname": "bmd-gpi",
 	"description": "Easy access to set GPI interfaces' event",
-	"version": "0.1.1",
+	"version": "1.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-bmd-gpi-and-tally-interface.git",
 	"bugs": "https://github.com/bitfocus/companion-module-bmd-gpi-and-tally-interface/issues",

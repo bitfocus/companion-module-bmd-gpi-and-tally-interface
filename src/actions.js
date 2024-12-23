@@ -6,11 +6,13 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'gpi',
-					type: 'number',
+					type: 'textinput',
 					label: 'GPI event',
-					default: 0,
-					min: 1,
-					max: 8
+					useVariables: true,
+					default: "0",
+					required: true,
+					regex: "^[1-8]$",
+					tooltip: "Number between 1-8"
 				},
 				{
 					id: 'port',
@@ -20,19 +22,26 @@ module.exports = function (self) {
 					min: 0,
 					max: 255,
 					useVariables: true,
-					regex: "^[0-9]*$"
+					regex: "^[0-9]*$",
+					required: true,
 				}
 			],
 			callback: async (event) => {
-				let portFiled  = await self.parseVariablesInString(event.options.port);
+				parent.log("info", "Setting dst_action")
+				let portFiled = await parent.parseVariablesInString(event.options.port);
 				let port = parseInt(portFiled)
+				let gpiFiled = await parent.parseVariablesInString(event.options.port);
+				let gpi = parseInt(gpiFiled)
+				if (isNaN(port) || gpi < 1 || gpi > 8) {
+					self.log('error', 'Port is not a number: ' + optAddress);
+					return;
+				}
 
 				if (isNaN(port)) {
 					self.log('error', 'Port is not a number: ' + optAddress);
 					return;
 				}
-				parent.log("info", "Setting src_action")
-				parent.setSrc(event.options.gpi, port)
+				parent.setSrc(gpi, port)
 			},
 		},
 		set_destination: {
@@ -40,11 +49,13 @@ module.exports = function (self) {
 			options: [
 				{
 					id: 'gpi',
-					type: 'number',
+					type: 'textinput',
 					label: 'GPI event',
-					default: 0,
-					min: 1,
-					max: 8
+					useVariables: true,
+					default: "0",
+					required: true,
+					regex: "^[1-8]$",
+					tooltip: "Number between 1-8"
 				},
 				{
 					id: 'port',
@@ -54,22 +65,29 @@ module.exports = function (self) {
 					min: 0,
 					max: 255,
 					useVariables: true,
-					regex: "^[0-9]*$"
+					regex: "^[0-9]*$",
+					required: true,
 				}
 			],
 			callback: async (event) => {
 				parent.log("info", "Setting dst_action")
-				let portFiled  = await self.parseVariablesInString(event.options.port);
+				let portFiled = await parent.parseVariablesInString(event.options.port);
 				let port = parseInt(portFiled)
+				let gpiFiled = await parent.parseVariablesInString(event.options.port);
+				let gpi = parseInt(gpiFiled)
+				if (isNaN(port) || gpi < 1 || gpi > 8) {
+					self.log('error', 'Port is not a number: ' + optAddress);
+					return;
+				}
 
 				if (isNaN(port)) {
 					self.log('error', 'Port is not a number: ' + optAddress);
 					return;
 				}
-				parent.setDst(event.options.gpi, port)
+				parent.setDst(gpi, port)
 			}
 		},
-		SetLatch : {
+		SetLatch: {
 			name: 'Override mode',
 			options: [
 				{
@@ -82,10 +100,10 @@ module.exports = function (self) {
 						{ id: '1', label: 'Latch mode' },
 					],
 				}],
-				callback: async (event) => {
-					parent.log("info", "Setting dst_action")
-					parent.setLatch(event.options.latch)
-				}
+			callback: async (event) => {
+				parent.log("info", "Setting dst_action")
+				parent.setLatch(event.options.latch)
+			}
 		}
 	})
 }
