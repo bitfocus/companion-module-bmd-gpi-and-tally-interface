@@ -60,6 +60,7 @@ module.exports = {
                             break;
                     }
                 })
+                self.checkFeedbacks('SourceState', 'DestinationState', 'LatchMode')
             })
         } else {
             self.updateStatus(InstanceStatus.BadConfig)

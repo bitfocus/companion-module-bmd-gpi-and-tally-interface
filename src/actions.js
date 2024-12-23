@@ -10,8 +10,7 @@ module.exports = function (self) {
 					label: 'GPI event',
 					default: 0,
 					min: 1,
-					max: 8,
-					useVariables: true
+					max: 8
 				},
 				{
 					id: 'port',
@@ -25,7 +24,15 @@ module.exports = function (self) {
 				}
 			],
 			callback: async (event) => {
-				parent.setSrc(event.options.gpi, event.options.port)
+				let portFiled  = await self.parseVariablesInString(event.options.port);
+				let port = parseInt(portFiled)
+
+				if (isNaN(port)) {
+					self.log('error', 'Port is not a number: ' + optAddress);
+					return;
+				}
+				parent.log("info", "Setting src_action")
+				parent.setSrc(event.options.gpi, port)
 			},
 		},
 		set_destination: {
@@ -37,8 +44,7 @@ module.exports = function (self) {
 					label: 'GPI event',
 					default: 0,
 					min: 1,
-					max: 8,
-					useVariables: true
+					max: 8
 				},
 				{
 					id: 'port',
@@ -53,7 +59,14 @@ module.exports = function (self) {
 			],
 			callback: async (event) => {
 				parent.log("info", "Setting dst_action")
-				parent.setDst(event.options.gpi, event.options.port)
+				let portFiled  = await self.parseVariablesInString(event.options.port);
+				let port = parseInt(portFiled)
+
+				if (isNaN(port)) {
+					self.log('error', 'Port is not a number: ' + optAddress);
+					return;
+				}
+				parent.setDst(event.options.gpi, port)
 			}
 		},
 		SetLatch : {
@@ -63,6 +76,7 @@ module.exports = function (self) {
 					id: 'latch',
 					type: 'dropdown',
 					label: 'Override mode',
+					default: '0',
 					choices: [
 						{ id: '0', label: 'Momentary Hold Video' },
 						{ id: '1', label: 'Latch mode' },
