@@ -27,10 +27,10 @@ module.exports = function (self) {
 				}
 			],
 			callback: async (event) => {
-				let portFiled = await parent.parseVariablesInString(event.options.port);
-				let port = parseInt(portFiled)
-				let gpiFiled = await parent.parseVariablesInString(event.options.gpi);
-				let gpi = parseInt(gpiFiled)
+				let portField = await parent.parseVariablesInString(event.options.port);
+				let port = parseInt(portField)
+				let gpiField = await parent.parseVariablesInString(event.options.gpi);
+				let gpi = parseInt(gpiField)
 				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
 					self.log('error', 'Set source action value error: GPI:'+gpi+' Port:'+port);
 					return;
@@ -65,10 +65,10 @@ module.exports = function (self) {
 				}
 			],
 			callback: async (event) => {
-				let portFiled = await parent.parseVariablesInString(event.options.port);
-				let port = parseInt(portFiled)
-				let gpiFiled = await parent.parseVariablesInString(event.options.gpi);
-				let gpi = parseInt(gpiFiled)
+				let portField = await parent.parseVariablesInString(event.options.port);
+				let port = parseInt(portField)
+				let gpiField = await parent.parseVariablesInString(event.options.gpi);
+				let gpi = parseInt(gpiField)
 				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
 					self.log('error', 'Set destination action Value error: GPI:'+gpi+' Port:'+port);
 					return;
