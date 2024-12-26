@@ -69,7 +69,6 @@ module.exports = {
     SetSrc: function (self, gpi, xpoint) {
         gpi = (parseInt(gpi) - 1).toString()
         xpoint = (parseInt(xpoint) - 1).toString()
-        self.log("info", "Setting source " + gpi + " " + xpoint)
         if (self.socket !== undefined && self.socket.isConnected) {
             self.socket.send('BUTTON SDI_A:\n' + gpi + ' ' + xpoint + '\n\n\n')
         }
@@ -77,7 +76,6 @@ module.exports = {
     SetDst: function (self, gpi, xpoint) {
         gpi = (parseInt(gpi) - 1).toString()
         xpoint = (parseInt(xpoint) - 1).toString()
-        self.log("info", "Setting source " + gpi + " " + xpoint)
         if (self.socket !== undefined && self.socket.isConnected) {
             self.socket.send('BUTTON SDI_B:\n' + gpi + ' ' + xpoint + '\n\n\n')
         }

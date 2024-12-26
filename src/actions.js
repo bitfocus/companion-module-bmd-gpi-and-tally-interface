@@ -15,7 +15,7 @@ module.exports = function (self) {
 					tooltip: "Number between 1-8"
 				},
 				{
-					id: 'port',
+					id: 'port',	
 					type: 'textinput',
 					label: 'Source Port',
 					default: 0,
@@ -32,10 +32,10 @@ module.exports = function (self) {
 				let gpiFiled = await parent.parseVariablesInString(event.options.gpi);
 				let gpi = parseInt(gpiFiled)
 				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
-					self.log('error', 'Set source action\nValue error: GPI:'+gpi+' Port:'+port);
+					self.log('error', 'Set source action value error: GPI:'+gpi+' Port:'+port);
 					return;
 				}
-				parent.log("info", "Set Source action\n GPI: " + gpi + " Port: " + port)
+				parent.log("info", "Set Source action GPI: " + gpi + " Port: " + port)
 				parent.setSrc(gpi, port)
 			},
 		},
@@ -70,10 +70,10 @@ module.exports = function (self) {
 				let gpiFiled = await parent.parseVariablesInString(event.options.gpi);
 				let gpi = parseInt(gpiFiled)
 				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
-					self.log('error', 'Set destination action\nValue error: GPI:'+gpi+' Port:'+port);
+					self.log('error', 'Set destination action Value error: GPI:'+gpi+' Port:'+port);
 					return;
 				}
-				parent.log("info", "Set Destination action\n GPI: " + gpi + " Port: " + port)
+				parent.log("info", "Set Destination action GPI: " + gpi + " Port: " + port)
 				parent.setDst(gpi, port)
 			},
 		},
@@ -91,7 +91,7 @@ module.exports = function (self) {
 					],
 				}],
 			callback: async (event) => {
-				parent.log("info", "Setting dst_action")
+				parent.log("info", "Setting latch mode: " + event.options.latch)
 				parent.setLatch(event.options.latch)
 			}
 		}
