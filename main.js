@@ -53,15 +53,12 @@ class BmdGPIAndTallyControll extends InstanceBase {
 	}
 
 	setDst(gpi, port) {
-		this.log("info", "Setting dst_main")
 		SetDst(this, gpi, port)
 	}
 	setSrc(gpi, port) {
-		this.log("info", "Setting src_main")
 		SetSrc(this, gpi, port)
 	}
 	setLatch(value) {
-		this.log("info", "Setting src_main")
 		SetLatch(this, value)
 	}
 	updateActions() {

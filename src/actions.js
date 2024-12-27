@@ -27,20 +27,15 @@ module.exports = function (self) {
 				}
 			],
 			callback: async (event) => {
-				parent.log("info", "Setting dst_action")
-				let portFiled = await parent.parseVariablesInString(event.options.port);
-				let port = parseInt(portFiled)
-				let gpiFiled = await parent.parseVariablesInString(event.options.port);
-				let gpi = parseInt(gpiFiled)
-				if (isNaN(port) || gpi < 1 || gpi > 8) {
-					self.log('error', 'Port is not a number: ' + optAddress);
+				let portField = await parent.parseVariablesInString(event.options.port);
+				let port = parseInt(portField)
+				let gpiField = await parent.parseVariablesInString(event.options.gpi);
+				let gpi = parseInt(gpiField)
+				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
+					self.log('error', 'Set source action value error: GPI:'+gpi+' Port:'+port);
 					return;
 				}
-
-				if (isNaN(port)) {
-					self.log('error', 'Port is not a number: ' + optAddress);
-					return;
-				}
+				parent.log("info", "Set Source action GPI: " + gpi + " Port: " + port)
 				parent.setSrc(gpi, port)
 			},
 		},
@@ -70,22 +65,17 @@ module.exports = function (self) {
 				}
 			],
 			callback: async (event) => {
-				parent.log("info", "Setting dst_action")
-				let portFiled = await parent.parseVariablesInString(event.options.port);
-				let port = parseInt(portFiled)
-				let gpiFiled = await parent.parseVariablesInString(event.options.port);
-				let gpi = parseInt(gpiFiled)
-				if (isNaN(port) || gpi < 1 || gpi > 8) {
-					self.log('error', 'Port is not a number: ' + optAddress);
+				let portField = await parent.parseVariablesInString(event.options.port);
+				let port = parseInt(portField)
+				let gpiField = await parent.parseVariablesInString(event.options.gpi);
+				let gpi = parseInt(gpiField)
+				if (isNaN(port) || gpi < 1 || gpi > 8 || isNaN(gpi)) {
+					self.log('error', 'Set destination action Value error: GPI:'+gpi+' Port:'+port);
 					return;
 				}
-
-				if (isNaN(port)) {
-					self.log('error', 'Port is not a number: ' + optAddress);
-					return;
-				}
+				parent.log("info", "Set Destination action GPI: " + gpi + " Port: " + port)
 				parent.setDst(gpi, port)
-			}
+			},
 		},
 		SetLatch: {
 			name: 'Override mode',
@@ -101,7 +91,7 @@ module.exports = function (self) {
 					],
 				}],
 			callback: async (event) => {
-				parent.log("info", "Setting dst_action")
+				parent.log("info", "Setting latch mode: " + event.options.latch)
 				parent.setLatch(event.options.latch)
 			}
 		}
