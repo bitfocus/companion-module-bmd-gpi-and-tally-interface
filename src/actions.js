@@ -15,7 +15,7 @@ module.exports = function (self) {
 					tooltip: "Number between 1-8"
 				},
 				{
-					id: 'port',	
+					id: 'port',
 					type: 'textinput',
 					label: 'Source Port',
 					default: 0,
