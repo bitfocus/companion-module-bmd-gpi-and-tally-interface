@@ -1,4 +1,12 @@
+const { GPIO_COUNT } = require('./videohub')
+
 module.exports = function (self) {
+	const emulation = []
+	for (let i = 1; i <= GPIO_COUNT; i++) {
+		emulation.push({ variableId: `gpi_input_${i}`, name: `GPI Input ${i} Closed` })
+		emulation.push({ variableId: `tally_output_${i}`, name: `Tally Output ${i} On` })
+	}
+
 	self.setVariableDefinitions([
 		{ variableId: 'GPI1Src', name: 'GPI Event 1 Source' },
 		{ variableId: 'GPI2Src', name: 'GPI Event 2 Source' },
@@ -17,5 +25,6 @@ module.exports = function (self) {
 		{ variableId: 'GPI7Dest', name: 'GPI Event 7 Destination' },
 		{ variableId: 'GPI8Dest', name: 'GPI Event 8 Destination' },
 		{ variableId: 'latch', name: 'Latch Mode Enabled' },
+		...emulation,
 	])
 }
