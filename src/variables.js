@@ -1,10 +1,11 @@
-const { TALLY_COUNT } = require('./atem')
-const { GPI_COUNT } = require('./videohub')
+const { GPIO_COUNT } = require('./videohub')
 
 module.exports = function (self) {
 	const emulation = []
-	for (let i = 1; i <= GPI_COUNT; i++) emulation.push({ variableId: `gpi_input_${i}`, name: `GPI Input ${i} Closed` })
-	for (let i = 1; i <= TALLY_COUNT; i++) emulation.push({ variableId: `tally_output_${i}`, name: `Tally Output ${i} On` })
+	for (let i = 1; i <= GPIO_COUNT; i++) {
+		emulation.push({ variableId: `gpi_input_${i}`, name: `GPI Input ${i} Closed` })
+		emulation.push({ variableId: `tally_output_${i}`, name: `Tally Output ${i} On` })
+	}
 
 	self.setVariableDefinitions([
 		{ variableId: 'GPI1Src', name: 'GPI Event 1 Source' },

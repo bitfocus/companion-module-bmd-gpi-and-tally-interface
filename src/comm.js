@@ -61,6 +61,9 @@ module.exports = {
                                 self.setVariableValues({ [varname]: id })
                             })
                             break;
+                        default:
+                            // Unhandled config blocks (e.g. the GPO crosspoints) are logged so they can be supported later
+                            if (blocks.trim()) self.log('debug', 'Unhandled block from interface:\n' + blocks)
                     }
                 })
                 self.checkFeedbacks('SourceState', 'DestinationState', 'LatchMode')

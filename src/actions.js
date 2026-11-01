@@ -1,4 +1,4 @@
-const { TALLY_COUNT } = require('./atem')
+const { GPIO_COUNT } = require('./videohub')
 
 module.exports = function (self) {
 	let parent = self
@@ -100,7 +100,7 @@ module.exports = function (self) {
 		set_tally_output: {
 			name: 'Emulation: Set tally output',
 			options: [
-				{ id: 'output', type: 'number', label: 'Tally output', default: 1, min: 1, max: TALLY_COUNT },
+				{ id: 'output', type: 'number', label: 'Tally output', default: 1, min: 1, max: GPIO_COUNT },
 				{
 					id: 'state',
 					type: 'dropdown',
