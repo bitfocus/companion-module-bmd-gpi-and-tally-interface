@@ -78,6 +78,10 @@ class VideohubEmulator {
 			block('INPUT LABELS:', [...labels, `${IDLE_INPUT} Idle`]),
 			block('OUTPUT LABELS:', labels),
 			this.routingBlock(),
+			block(
+				'VIDEO OUTPUT LOCKS:',
+				labels.map((_, i) => `${i} U`),
+			),
 			block('END PRELUDE:', []),
 		].join('')
 	}
