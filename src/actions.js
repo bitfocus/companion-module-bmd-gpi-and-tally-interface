@@ -1,3 +1,5 @@
+const { GPIO_COUNT } = require('./videohub')
+
 module.exports = function (self) {
 	let parent = self
 	self.setActionDefinitions({
@@ -94,6 +96,24 @@ module.exports = function (self) {
 				parent.log("info", "Setting latch mode: " + event.options.latch)
 				parent.setLatch(event.options.latch)
 			}
-		}
+		},
+		set_tally_output: {
+			name: 'Emulation: Set tally output',
+			options: [
+				{ id: 'output', type: 'number', label: 'Tally output', default: 1, min: 1, max: GPIO_COUNT },
+				{
+					id: 'state',
+					type: 'dropdown',
+					label: 'State',
+					default: 'on',
+					choices: [
+						{ id: 'on', label: 'On' },
+						{ id: 'off', label: 'Off' },
+						{ id: 'toggle', label: 'Toggle' },
+					],
+				},
+			],
+			callback: (event) => self.setTallyOutput(event.options.output, event.options.state),
+		},
 	})
 }
