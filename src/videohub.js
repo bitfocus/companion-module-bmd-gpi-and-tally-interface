@@ -15,13 +15,13 @@ const IDLE_INPUT = GPIO_COUNT // an extra input that outputs show while their GP
 const RELAY_OUTPUT = (relay) => GPIO_COUNT + relay - 1
 
 class VideohubEmulator {
-	constructor(onChange, onError) {
+	constructor(onChange, onError, port = VIDEOHUB_PORT) {
 		this.onChange = onChange
 		this.routing = new Array(2 * GPIO_COUNT).fill(IDLE_INPUT) // routing[output] = input
 		this.clients = new Set()
 		this.server = net.createServer((socket) => this.addClient(socket))
 		this.server.on('error', onError)
-		this.server.listen(VIDEOHUB_PORT)
+		this.server.listen(port)
 	}
 
 	destroy() {
@@ -74,7 +74,7 @@ class VideohubEmulator {
 		if (header !== 'VIDEO OUTPUT ROUTING:') return
 		const changes = lines.map((line) => line.split(' ').map(Number))
 		const valid = changes.filter(([output, input]) => this.routing[output] !== undefined && input <= IDLE_INPUT)
-		this.route(valid)
+		if (valid.length) this.route(valid)
 	}
 
 	prelude() {
@@ -111,4 +111,4 @@ function block(header, lines) {
 	return [header, ...lines].join('\n') + '\n\n'
 }
 
-module.exports = { VideohubEmulator, GPIO_COUNT }
+module.exports = { VideohubEmulator, GPIO_COUNT, VIDEOHUB_PORT, block }

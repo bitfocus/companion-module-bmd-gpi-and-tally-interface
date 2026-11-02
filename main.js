@@ -3,7 +3,7 @@ const UpgradeScripts = require('./src/upgrades')
 const UpdateActions = require('./src/actions')
 const UpdateFeedbacks = require('./src/feedbacks')
 const UpdateVariableDefinitions = require('./src/variables')
-const { ConnectClient, SetSrc, SetDst, SetLatch } = require('./src/comm')
+const { ConnectClient, SetSrc, SetDst, SetLatch, AutoConfigure } = require('./src/comm')
 const { VideohubEmulator, GPIO_COUNT } = require('./src/videohub')
 
 class BmdGPIAndTallyControll extends InstanceBase {
@@ -24,19 +24,11 @@ class BmdGPIAndTallyControll extends InstanceBase {
 	async destroy() {
 		this.log('debug', 'destroy')
 		this.stopEmulation()
-		if (this.comm) {
-			this.comm.destroy()
-		} else {
-			this.updateStatus(InstanceStatus.Disconnected)
-		}
-
+		this.socket?.destroy()
+		clearInterval(this.ping)
 	}
 
 	async configUpdated(config) {
-		if (this.comm) {
-			this.comm.destroy()
-			delete this.comm
-		}
 		this.config = config
 		this.connectClient()
 		this.startEmulation()
@@ -71,6 +63,10 @@ class BmdGPIAndTallyControll extends InstanceBase {
 	}
 	setLatch(value) {
 		SetLatch(this, value)
+	}
+	autoConfigure() {
+		if (!this.videohub) return this.log('warn', 'Enable Videohub emulation in the module config before auto-configuring')
+		AutoConfigure(this)
 	}
 	// Companion acts as the Videohub the interface connects to, see src/videohub.js
 	startEmulation() {

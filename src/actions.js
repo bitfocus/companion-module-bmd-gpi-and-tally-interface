@@ -115,5 +115,11 @@ module.exports = function (self) {
 			],
 			callback: (event) => self.setTallyOutput(event.options.output, event.options.state),
 		},
+		auto_configure: {
+			name: 'Emulation: Auto-configure interface',
+			description: 'Points the interface at this Companion and maps all GPIs and tally outputs onto the emulated Videohub',
+			options: [],
+			callback: () => self.autoConfigure(),
+		},
 	})
 }

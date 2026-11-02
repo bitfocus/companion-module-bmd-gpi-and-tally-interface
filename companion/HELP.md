@@ -9,10 +9,12 @@ With **Emulate a Videohub** enabled, Companion pretends to be the Videohub route
 - **GPI inputs** – closing GPI _n_ routes input _n_ to output _n_. The variables `gpi_input_1` … `gpi_input_8` are `true` while the contact is closed.
 - **Tally outputs** – the action *Emulation: Set tally output* routes input _n_ to output _8 + n_, which closes relay _n_. The states are in `tally_output_1` … `tally_output_8`.
 
-Setup in Videohub Hardware Panel Setup (the interface must be in Videohub mode, not ATEM mode):
+Setup:
 
-1. Set **Remote Videohub IP** to the Companion computer.
-2. Set GPO _n_ to input _n_ → output _8 + n_ (GPO 1: 1 → 9 … GPO 8: 8 → 16), with GPO match off.
-3. Enter the interface's IP as **Target IP**. On connect the module sets GPI _n_ to input _n_ → output _n_ in momentary mode. Without a Target IP, set this up by hand too.
+1. In Videohub Hardware Panel Setup, set the interface to connect to a **Videohub** (this can't be done remotely).
+2. Enter the interface's IP as **Target IP** and enable **Emulate a Videohub**.
+3. Run the action *Emulation: Auto-configure interface* once. It points the interface at this Companion, sets GPI _n_ to input _n_ → output _n_ in momentary mode, and GPO _n_ to input _n_ → output _8 + n_.
+
+Without a Target IP, do the same by hand in Videohub Hardware Panel Setup, with GPO match off.
 
 Only one interface can use the emulation at a time, and port 9990 must be free on the Companion computer.
