@@ -1,6 +1,7 @@
 const { test, before, after } = require('node:test')
 const assert = require('node:assert')
 const net = require('net')
+const { EventEmitter } = require('events')
 const { ConnectClient, SetSrc, AutoConfigure } = require('../src/comm')
 const { waitFor } = require('./helpers')
 
@@ -62,13 +63,15 @@ test('setting a GPI source sends it 0-based', async () => {
 	await waitFor(() => received === 'BUTTON SDI_A:\n2 4\n\n\n')
 })
 
-test('auto-configure points the interface at Companion and maps every GPI and GPO', async () => {
+test('auto-configure points the interface at Companion, then maps every GPI and GPO once it connects', async () => {
 	received = ''
+	self.videohub = { clients: new Set(), server: new EventEmitter() } // the emulator, before the interface connects
 	AutoConfigure(self)
-	await waitFor(() => received.includes('SETTINGS:'))
+	await waitFor(() => received === 'NETWORK:\nVideohub address: 127.0.0.1\nVideohub port: 9990\n\n')
 
-	const [network, sources, destinations, settings] = received.trim().split('\n\n')
-	assert.strictEqual(network, 'NETWORK:\nVideohub address: 127.0.0.1\nVideohub port: 9990')
+	self.videohub.server.emit('connection')
+	await waitFor(() => received.includes('SETTINGS:'))
+	const [, sources, destinations, settings] = received.trim().split('\n\n')
 	assert.match(sources, /^BUTTON SDI_A:\n0 0\n1 1\n.*\n7 7\n8 0\n.*\n15 7$/s)
 	assert.match(destinations, /^BUTTON SDI_B:\n0 0\n.*\n15 15$/s)
 	assert.strictEqual(settings, 'SETTINGS:\nLatch mode: 0\nFollow mode: 0')

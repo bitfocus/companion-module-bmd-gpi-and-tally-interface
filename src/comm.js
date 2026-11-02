@@ -97,19 +97,23 @@ module.exports = {
 
 // Points the interface at Companion's emulated Videohub and maps its buttons onto it (see src/videohub.js).
 // Buttons 0-7 are the GPIs, 8-15 the GPOs: button b routes input b % 8 to output b.
-// "Connect to" can't be set over this port, so Videohub mode is chosen in Videohub Hardware Panel Setup.
+// The interface only accepts routes to outputs its Videohub has, so the buttons are mapped once it is connected to ours.
 module.exports.AutoConfigure = function (self) {
     if (!self.socket?.isConnected) return self.log('warn', 'Auto-configure needs a connection to the Target IP')
 
     const companionIp = self.socket._socket.localAddress // the address the interface reaches us on
+    self.socket.send(block('NETWORK:', [`Videohub address: ${companionIp}`, `Videohub port: ${VIDEOHUB_PORT}`]))
+
     const buttons = [...Array(2 * GPIO_COUNT).keys()]
-    self.socket.send(
-        block('NETWORK:', [`Videohub address: ${companionIp}`, `Videohub port: ${VIDEOHUB_PORT}`]) +
+    const mapButtons = () =>
+        self.socket.send(
             block('BUTTON SDI_A:', buttons.map((b) => `${b} ${b % GPIO_COUNT}`)) +
-            block('BUTTON SDI_B:', buttons.map((b) => `${b} ${b}`)) +
-            // Momentary, so a GPI is released when its contact opens. Follow mode is "GPO match", which ignores the GPO routes
-            block('SETTINGS:', ['Latch mode: 0', 'Follow mode: 0']),
-    )
+                block('BUTTON SDI_B:', buttons.map((b) => `${b} ${b}`)) +
+                // Momentary, so a GPI is released when its contact opens. Follow mode is "GPO match", which ignores the GPO routes
+                block('SETTINGS:', ['Latch mode: 0', 'Follow mode: 0']),
+        )
+    if (self.videohub.clients.size) mapButtons()
+    else self.videohub.server.once('connection', mapButtons)
 }
 
 function ping(self) {
