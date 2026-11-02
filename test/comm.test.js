@@ -65,7 +65,7 @@ test('setting a GPI source sends it 0-based', async () => {
 
 test('auto-configure points the interface at Companion, then maps every GPI and GPO once it connects', async () => {
 	received = ''
-	self.videohub = { clients: new Set(), server: new EventEmitter() } // the emulator, before the interface connects
+	self.videohub = { port: 9990, clients: new Set(), server: new EventEmitter() } // the emulator, before the interface connects
 	AutoConfigure(self)
 	await waitFor(() => received === 'NETWORK:\nVideohub address: 127.0.0.1\nVideohub port: 9990\n\n')
 

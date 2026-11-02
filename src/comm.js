@@ -1,5 +1,5 @@
 const { InstanceStatus, TCPHelper } = require('@companion-module/base')
-const { GPIO_COUNT, VIDEOHUB_PORT, block } = require('./videohub')
+const { GPIO_COUNT, block } = require('./videohub')
 module.exports = {
     ConnectClient: async function (self) {
         if (self.socket) {
@@ -17,6 +17,9 @@ module.exports = {
             self.socket.on('error', (err) => {
                 self.updateStatus(InstanceStatus.ConnectionFailure, err.message)
                 self.log('error', 'Network error: ' + err.message)
+            })
+            self.socket.on('connect', () => {
+                if (self.config.emulate && self.config.autoconfigure) module.exports.AutoConfigure(self)
             })
             self.ping = setInterval(() => ping(self), 2000);
             // The interface splits blocks over several packets, so keep the unfinished end for the next one
@@ -99,10 +102,8 @@ module.exports = {
 // Buttons 0-7 are the GPIs, 8-15 the GPOs: button b routes input b % 8 to output b.
 // The interface only accepts routes to outputs its Videohub has, so the buttons are mapped once it is connected to ours.
 module.exports.AutoConfigure = function (self) {
-    if (!self.socket?.isConnected) return self.log('warn', 'Auto-configure needs a connection to the Target IP')
-
     const companionIp = self.socket._socket.localAddress // the address the interface reaches us on
-    self.socket.send(block('NETWORK:', [`Videohub address: ${companionIp}`, `Videohub port: ${VIDEOHUB_PORT}`]))
+    self.socket.send(block('NETWORK:', [`Videohub address: ${companionIp}`, `Videohub port: ${self.videohub.port}`]))
 
     const buttons = [...Array(2 * GPIO_COUNT).keys()]
     const mapButtons = () =>

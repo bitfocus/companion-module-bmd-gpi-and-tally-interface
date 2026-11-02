@@ -3,7 +3,7 @@ const UpgradeScripts = require('./src/upgrades')
 const UpdateActions = require('./src/actions')
 const UpdateFeedbacks = require('./src/feedbacks')
 const UpdateVariableDefinitions = require('./src/variables')
-const { ConnectClient, SetSrc, SetDst, SetLatch, AutoConfigure } = require('./src/comm')
+const { ConnectClient, SetSrc, SetDst, SetLatch } = require('./src/comm')
 const { VideohubEmulator, GPIO_COUNT } = require('./src/videohub')
 
 class BmdGPIAndTallyControll extends InstanceBase {
@@ -52,6 +52,24 @@ class BmdGPIAndTallyControll extends InstanceBase {
 				width: 12,
 				default: false,
 			},
+			{
+				type: 'number',
+				id: 'port',
+				label: 'Emulated Videohub port',
+				tooltip: 'Blackmagic Videohub Server also uses 9990, pick another port when it runs on this computer',
+				width: 4,
+				default: 9990,
+				min: 1,
+				max: 65535,
+			},
+			{
+				type: 'checkbox',
+				id: 'autoconfigure',
+				label: 'Auto-configure the interface on connect',
+				tooltip: 'Points the interface at this Companion and maps all GPIs and tally outputs onto the emulated Videohub',
+				width: 12,
+				default: true,
+			},
 		]
 	}
 
@@ -64,26 +82,30 @@ class BmdGPIAndTallyControll extends InstanceBase {
 	setLatch(value) {
 		SetLatch(this, value)
 	}
-	autoConfigure() {
-		if (!this.videohub) return this.log('warn', 'Enable Videohub emulation in the module config before auto-configuring')
-		AutoConfigure(this)
-	}
 	// Companion acts as the Videohub the interface connects to, see src/videohub.js
 	startEmulation() {
 		this.stopEmulation()
 		if (!this.config.emulate) return
 
 		const onError = (err) => {
-			this.log('error', 'Videohub emulation: ' + err.message)
-			this.updateStatus(InstanceStatus.ConnectionFailure, err.message)
+			this.emulationError = 'Videohub emulation: ' + err.message
+			this.log('error', this.emulationError)
+			this.updateStatus(InstanceStatus.ConnectionFailure)
 		}
-		this.videohub = new VideohubEmulator(() => this.updateGpioVariables(), onError)
+		this.videohub = new VideohubEmulator(() => this.updateGpioVariables(), onError, this.config.port)
 		this.updateGpioVariables()
 	}
 
 	stopEmulation() {
 		this.videohub?.destroy()
 		delete this.videohub
+		delete this.emulationError
+	}
+
+	// A failed emulation outranks the interface connection's status, which src/comm.js keeps updating
+	updateStatus(status, message) {
+		if (this.emulationError) super.updateStatus(InstanceStatus.ConnectionFailure, this.emulationError)
+		else super.updateStatus(status, message)
 	}
 
 	updateGpioVariables() {

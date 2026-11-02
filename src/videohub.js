@@ -16,6 +16,7 @@ const RELAY_OUTPUT = (relay) => GPIO_COUNT + relay - 1
 
 class VideohubEmulator {
 	constructor(onChange, onError, port = VIDEOHUB_PORT) {
+		this.port = port
 		this.onChange = onChange
 		this.routing = new Array(2 * GPIO_COUNT).fill(IDLE_INPUT) // routing[output] = input
 		this.clients = new Set()
@@ -111,4 +112,4 @@ function block(header, lines) {
 	return [header, ...lines].join('\n') + '\n\n'
 }
 
-module.exports = { VideohubEmulator, GPIO_COUNT, VIDEOHUB_PORT, block }
+module.exports = { VideohubEmulator, GPIO_COUNT, block }
