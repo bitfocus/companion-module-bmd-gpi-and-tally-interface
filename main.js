@@ -3,6 +3,7 @@ const UpgradeScripts = require('./src/upgrades')
 const UpdateActions = require('./src/actions')
 const UpdateFeedbacks = require('./src/feedbacks')
 const UpdateVariableDefinitions = require('./src/variables')
+const UpdatePresets = require('./src/presets')
 const { ConnectClient, SetSrc, SetDst, SetLatch } = require('./src/comm')
 const { VideohubEmulator, GPIO_COUNT } = require('./src/videohub')
 
@@ -16,6 +17,7 @@ class BmdGPIAndTallyControll extends InstanceBase {
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
+		UpdatePresets(this)
 		this.updateStatus(InstanceStatus.Connecting) // set status to connecting
 		this.connectClient() // connect to client
 		this.startEmulation()
@@ -115,6 +117,7 @@ class BmdGPIAndTallyControll extends InstanceBase {
 			values[`tally_output_${i}`] = this.videohub.relayOn(i)
 		}
 		this.setVariableValues(values)
+		this.checkFeedbacks('TallyOutput')
 	}
 
 	setTallyOutput(relay, state) {

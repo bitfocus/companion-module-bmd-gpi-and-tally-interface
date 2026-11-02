@@ -7,7 +7,7 @@ This module can help you, to configure the GPI events on BlackmagicDesigne GPI &
 With **Emulate a Videohub** enabled, Companion pretends to be the Videohub router the interface reports to, and everything is done with routes on that emulated hub:
 
 - **GPI inputs** – closing GPI _n_ routes input _n_ to output _n_. The variables `gpi_input_1` … `gpi_input_8` are `true` while the contact is closed.
-- **Tally outputs** – the action *Emulation: Set tally output* routes input _n_ to output _8 + n_, which closes relay _n_. The states are in `tally_output_1` … `tally_output_8`.
+- **Tally outputs** – the action *Emulation: Set tally output* routes input _n_ to output _8 + n_, which closes relay _n_. The states are in `tally_output_1` … `tally_output_8` and the feedback *Emulation: Tally output on*. The **Tally outputs** presets have an on, off and toggle button for every output, lit red while it is on.
 
 Setup:
 
