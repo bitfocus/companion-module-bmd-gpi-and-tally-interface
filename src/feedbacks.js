@@ -1,7 +1,15 @@
 const { combineRgb } = require('@companion-module/base')
+const { GPIO_COUNT } = require('./videohub')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
+		TallyOutput: {
+			name: 'Emulation: Tally output on',
+			type: 'boolean',
+			defaultStyle: { bgcolor: combineRgb(255, 0, 0), color: combineRgb(255, 255, 255) },
+			options: [{ id: 'output', type: 'number', label: 'Tally output', default: 1, min: 1, max: GPIO_COUNT }],
+			callback: (feedback) => self.videohub?.relayOn(feedback.options.output) ?? false,
+		},
 		DestinationState: {
 			name: 'Feedback for destination value',
 			type: 'boolean',
